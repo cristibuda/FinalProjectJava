@@ -19,10 +19,10 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/")
-    public ResponseEntity<ApiResponse> getAllUsers(){
+    public ResponseEntity<ApiResponse> getAllUsers() {
 
-        List<User> userList= this.userService.findALL();
-        ApiResponse response=new ApiResponse.Builder()
+        List<User> userList = this.userService.findALL();
+        ApiResponse response = new ApiResponse.Builder()
                 .status(200)
                 .message("Lista user generata")
                 .data(userList)
@@ -31,7 +31,7 @@ public class UserController {
     }
 
     @GetMapping("/hello")
-    public String sayHello(){
+    public String sayHello() {
         User user = new User();
         user.setEmail("test@test.com");
         user.setPassword("12");
@@ -41,39 +41,53 @@ public class UserController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<ApiResponse> createUser(@RequestBody User user){
-        ApiResponse response=new ApiResponse.Builder()
+    public ResponseEntity<ApiResponse> createUser(@RequestBody User user) {
+
+        User usr = new User();
+        usr.setUsername(user.getUsername());
+        usr.setEmail(user.getEmail());
+        usr.setPassword(usr.getPassword());
+
+        ApiResponse response = new ApiResponse.Builder()
                 .status(200)
                 .message("Utilizator creat cu succes")
-                .data(userService.createUser(user))
+                .data(userService.createUser(usr))
                 .build();
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/")
-    public ResponseEntity<ApiResponse> updateUser(User user){
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponse> updateUser(@RequestBody User user, @PathVariable("id") Integer id) {
 
-        ApiResponse response=new ApiResponse.Builder()
+        User usr = new User();
+        usr.setId(id);
+        usr.setUsername(user.getUsername());
+        usr.setEmail(user.getEmail());
+        usr.setPassword(usr.getPassword());
+
+
+        ApiResponse response = new ApiResponse.Builder()
                 .status(200)
                 .message("Utilizator actualizat cu succes")
-                .data(userService.updateUser(user))
+                .data(userService.updateUser(usr))
                 .build();
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/")
-    public ResponseEntity<ApiResponse> deleteUser(User user){
-         userService.deleteUser(user);
-         ApiResponse response=new ApiResponse.Builder()
-                 .status(200)
-                 .message("Utilizator sters cu succes")
-                 .data(null)
-                 .build();
-         return ResponseEntity.ok(response);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse> deleteUser(@PathVariable("id") Integer id) {
+        userService.deleteUser(id);
+        ApiResponse response = new ApiResponse.Builder()
+                .status(200)
+                .message("Utilizator sters cu succes")
+                .data(null)
+                .build();
+        return ResponseEntity.ok(response);
     }
+
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse> loginUser(User user){
-        ApiResponse response=new ApiResponse.Builder()
+    public ResponseEntity<ApiResponse> loginUser(User user) {
+        ApiResponse response = new ApiResponse.Builder()
                 .status(200)
                 .message("Utilizator logat cu succes")
                 .data(null)
@@ -82,7 +96,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse> registerUser(@RequestBody User user){
+    public ResponseEntity<ApiResponse> registerUser(@RequestBody User user) {
         ApiResponse response = new ApiResponse.Builder()
                 .status(200)
                 .message("Registered")

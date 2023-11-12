@@ -35,4 +35,6 @@ public class ItemService {
     public void deleteItem(Integer id){
         itemRepository.deleteById(id);
     }
+
+    public Optional<Item> searchItem(String word){return itemRepository.searchItemByTitle(word);}
 }
